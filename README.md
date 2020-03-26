@@ -1,11 +1,12 @@
-# EVALUATION POC  BACK END
-This document purpose is give a brief description of the web application evaluation-poc-back-end.
+# ATS - ATM Test
+This document purpose is give a brief description of the web application ats-atm
 ## Overview
-The goal of the application is to provide a REST service exposing methods to retrieve and filter a list of ATMs and a front-end application that calls the REST methods and displays the ATMs.
+The goal of the application is to provide a REST service exposing methods to retrieve and filter a list of ATMs
+and a front-end application that calls the REST methods and displays the ATMs.
 
 The REST API must provide:
 - a method for retrieve ATMs for a given city
-- a method for searching a keyword in the ATM's field
+- a method for searching a keyword in the ATM's fields
 
 The front-end application must provide a web page diplaying:
 - a form calling the REST method passing a city
@@ -14,9 +15,12 @@ The front-end application must provide a web page diplaying:
 
 
 For the development the following tools has been used:
-* Eclipse IDE 2019-09 R (4.13.0)
-* Spring Framework  4.3.13.RELEASE
-* Apache Tomcat 7.0
+* Eclipse Oxygen.3a Release (4.7.3a)
+* Spring Framework  4.3.26
+* Spring security 4.2.14
+* Apache Tomcat 7.0.103
+* Apache Maven 3.1.1
+* JDK 1.8.0_171
 
 The JSON containing all the ATMs is available at :
 ```sh
@@ -65,4 +69,6 @@ The service implementation **ATMServiceIMPL**  has been injected into the Spring
 This class has the reponsability to call the REST services (still using **RestTemplate** class) and return the filtered list to the controller.
 For displaying the ATM List **JSTL** tag-libraries has been used.
 
+For the view layout, apache tiles has been used.
+I18N has been configurated for use of the basename 'messages', the resource files are located under 'src\main\resources\'
 
