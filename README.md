@@ -14,6 +14,11 @@ The front-end application provides a web page displaying:
 - a search box for free search: on submit a search is performed on the ATMs properties
 - as result of search, the list of the ATMs obtained is displayed in a table and a button that shows a modal with the JSON from the service is available
 
+For accessing the application, due to spring security, the credentials to be used are
+user: davidep
+password: 123456
+
+
 For the development the following tools has been used:
 * Eclipse Oxygen.3a Release (4.7.3a)
 * Spring Framework  4.3.26
@@ -71,3 +76,5 @@ For displaying the ATM List **JSTL** tag-libraries has been used.
 For the view layout, apache tiles has been used.
 I18N has been configurated for use of the basename 'messages', the resource files are located under 'src\main\resources\'
 
+# Security
+As a bonus, spring security has been enabled, securing the access to the app page and to the service call with baseauth.
