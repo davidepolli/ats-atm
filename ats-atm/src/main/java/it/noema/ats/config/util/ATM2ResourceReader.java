@@ -29,7 +29,7 @@ public class ATM2ResourceReader extends Jackson2ResourceReader {
 	public Object readFrom(Resource resource, ClassLoader classLoader) throws Exception {
 
 		InputStream stream = resource.getInputStream();
-		JsonNode node = mapper.reader(JsonNode.class).readTree(stream);
+		JsonNode node = mapper.readerFor(JsonNode.class).readTree(stream);
 
 		if (node.isArray()) {
 
@@ -58,7 +58,7 @@ public class ATM2ResourceReader extends Jackson2ResourceReader {
 
 		Class<?> type = ClassUtils.resolveClassName(ATM.class.getName(), classLoader);
 
-		return mapper.reader(type).readValue(node);
+		return mapper.readerFor(type).readValue(node);
 	}
 	
 	private ObjectMapper mapper;

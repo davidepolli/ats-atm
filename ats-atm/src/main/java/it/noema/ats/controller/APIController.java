@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import it.noema.ats.model.ATM;
@@ -29,8 +30,13 @@ public class APIController {
 		return atmService.findByCity(city);
 	}
 	
-	@GetMapping(value = "search/{keyword}")
-	private List<ATM> findByKeyword(@PathVariable String keyword) {
+//	@GetMapping(value = "search/{keyword}")
+//	private List<ATM> findByKeyword(@PathVariable String keyword) {
+//		return atmService.findByKeyword(keyword);
+//	}
+	
+	@GetMapping(value = "filter")
+	private List<ATM> filterByKeyword(@RequestParam String keyword) {
 		return atmService.findByKeyword(keyword);
 	}
 

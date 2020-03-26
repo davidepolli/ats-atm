@@ -1,47 +1,39 @@
 <%@ include file="init.jsp"%>
 
-<%--
-<h2><spring:message code="welcome.message"/></h2>
-<form:form action="processForm" modelAttribute="student">
 
 
-</form:form>
- --%>
+<spring:url value="${findByCityServiceURL}" var="findByCityServiceURL" htmlEscape="true"/>
+<spring:url value="${keywordFilterServiceURL}" var="keywordFilterServiceURL" htmlEscape="true"/>
 
-<%--
 <div class="row">
 	<div class="col">
 		<div class="card my-2">
-			<div class="card-header">REST ATM Services</div>
+			<div class="card-header"><spring:message code="rest.services"/></div>
 			<div class="card-body">
 				<table class="table table-striped table-responsive-lg">
 					<thead>
 						<tr>
-							<th scope="col">METHOD</th>
-							<th scope="col">URL</th>
-							<th scope="col">Description</th>
+							<th scope="col"><spring:message code="label.method"/></th>
+							<th scope="col"><spring:message code="label.url"/></th>
+							<th scope="col"><spring:message code="label.description"/></th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr>
-							<td><a
-								href="http://localhost:8080/evaluation-poc-back-end/api/ATMs/"
-								class="btn btn-primary">GET</a></td>
-							<td>http://localhost:8080/evaluation-poc-back-end/api/ATMs/</td>
-							<td>Retrieve all the ATMs</td>
+							<td><span class="btn btn-primary">GET</span></td>
+							<td> http://localhost:8080/ats-atm/api/atm/all</td>
+							<td><spring:message code="service.all.description"/></td>
 						</tr>
-						<tr>
-							<td><a
-								href="http://localhost:8080/evaluation-poc-back-end/api/ATMs/"
-								class="btn btn-primary">GET</a></td>
-							<td>http://localhost:8080/evaluation-poc-back-end/api/ATMs/{cityName}</td>
-							<td>Retrieve the city ATMs</td>
-						</tr>
-
 						<tr>
 							<td><span class="btn btn-primary">GET</span></td>
-							<td>http://localhost:8080/evaluation-poc-back-end/api/ATMs/{cityName}/{searchCriteria}</td>
-							<td>Retrieve the city ATMs filtered by a criteria</td>
+							<td>http://localhost:8080/ats-atm/api/atm/city/{cityName}</td>
+							<td><spring:message code="service.city.description"/></td>
+						</tr>
+						
+						<tr>
+							<td><span class="btn btn-primary">GET</span></td>
+							<td>http://localhost:8080/ats-atm/api/atm/filter?keyword={keyword}</td>
+							<td><spring:message code="service.filter.description"/></td>
 						</tr>
 
 					</tbody>
@@ -50,7 +42,6 @@
 		</div>
 	</div>
 </div>
- --%>
  
  
 <div class="row">
@@ -58,27 +49,23 @@
 
 		<div class="card my-2">
 
-			<div class="card-header"><spring:message code="city.selection"></spring:message></div>
+			<div class="card-header"><spring:message code="city.selection"/></div>
 			<div class="card-body">
 				
-				<form:form></form:form>
-				
-				<form action="${pageContext.request.contextPath}/atm/list"
-					method="GET">
+				<form id="citySelect" action="#" >
 					<div class="row">
 						<c:if test="${not empty(error)}">
 							<div class="text-danger">${error}</div>
 						</c:if>
 					</div>
 					<div class="form-group">
-						<label for="city">City:</label> <select name="selectedCity"
-							class="form-control" id="city">
+						<label for="city"><spring:message code="label.city"/>:</label> <select name="selectedCity" class="form-control" id="city">
 							<c:choose>
 								<c:when test="${not empty(selectedCity)}">
 									<option value="${cityName}" selected="selected">${selectedCity}</option>
 								</c:when>
 								<c:otherwise>
-									<option value="" selected hidden="">Choose here</option>
+									<option value="" selected hidden=""><spring:message code="label.select.city"/></option>
 								</c:otherwise>
 							</c:choose>
 							<c:forEach var="cityName" items="${cities}">
@@ -86,60 +73,199 @@
 							</c:forEach>
 						</select>
 					</div>
-
-					<button type="submit" class="btn btn-primary">Submit</button>
 				</form>
 			</div>
 		</div>
 	</div>
+	
+	<div class="col">
+
+		<div class="card my-2">
+
+			<div class="card-header"><spring:message code="label.free.search"/> </div>
+			<div class="card-body">
+			
+				<form id="searchForm" action="#">
+					<div class="form-group">
+						<label for="search"><spring:message code="label.keyword"/>:</label>
+						<input required="required" type="text" class="form-control" name="keyword">
+					</div>
+					<button type="submit" class="btn btn-primary"><spring:message code="label.submit"/></button>
+				</form>				
+				
+			</div>
+		</div>
+	</div>
 </div>
-<c:if test="${not empty(selectedCity)}">
+<div id="searchResult">
 	<div class="row">
 		<div class="col">
 			<div class="card my-2">
 				<div class="card-header">
-					ATM in ${selectedCity}
-					<c:if test="${not empty(searchCriteria)}">
-						Search parameter : "${searchCriteria}"
-						</c:if>
+					<span><spring:message code="search.result"/></span>
+					<span class="ml-5">
+						<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#jsonModal">
+							<spring:message code="label.show.json"/>
+						</button>
+					 </span>
 				</div>
-
+	
 				<div class="card-body">
-					<form action="${pageContext.request.contextPath}/atm/search"
-						method="GET">
-						<div class="form-group">
-							<label for="search">Search:</label> <input type="text"
-								class="form-control" name="searchCriteria" id="search"
-								value="${searchCriteria}">
-						</div>
-						<button type="submit" class="btn btn-primary">Submit</button>
-					</form>
+					
 					<table class="table table-striped table-responsive-lg">
 						<thead>
 							<tr>
-								<th scope="col">#</th>
-								<th scope="col">City</th>
-								<th scope="col">Address</th>
-								<th scope="col">Distance</th>
-								<th scope="col">Type</th>
+								<th scope="col"><spring:message code="label.id"/></th>
+								<th scope="col"><spring:message code="label.city"/></th>
+								<th scope="col"><spring:message code="label.address"/></th>
+								<th scope="col"><spring:message code="label.position"/></th>
+								<th scope="col"><spring:message code="label.type"/></th>
 							</tr>
 						</thead>
-						<tbody>
-							<c:forEach varStatus="loop" var="atm" items="${atms}">
-								<tr>
-									<th scope="row">${loop.index + 1}</th>
-									<td>${atm.address.city}-${atm.address.postalcode}</td>
-									<td>${atm.address.street}${atm.address.housenumber},
-										(${atm.address.geoLocation.lat},${atm.address.geoLocation.lng})</td>
-									<td>${atm.distance}</td>
-									<td>${atm.type}</td>
-								</tr>
-							</c:forEach>
+						<tbody id="results">
+							
 						</tbody>
 					</table>
 				</div>
 			</div>
 		</div>
 	</div>
+</div>
 
-</c:if>
+
+
+
+<div class="modal fade" id="jsonModal" tabindex="-1" role="dialog" aria-labelledby="jsonModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">JSON</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+<script>
+	jQuery(document).ready(function($) {
+	
+		
+/* 		$('#jsonModal').on('show.bs.modal', function (event) {
+		  
+		});
+ */		
+		
+		
+		
+		
+		
+		
+		
+		$("#city").change(function(){
+			
+			cleanResults();
+			
+			var selectedCountry = $(this).children("option:selected").val();
+	        var serviceURL = '${findByCityServiceURL}/'+selectedCountry;
+			
+			serviceCall(serviceURL);
+		});
+		
+		
+		$('#searchForm').on('submit', function (event) {
+			event.preventDefault()
+			
+			cleanResults();
+			
+			var form_data = $(this).serialize();
+			
+			var serviceURL = '${keywordFilterServiceURL}?'+form_data;
+			
+			
+			serviceCall(serviceURL);
+		 
+		});
+		
+	});
+	
+	
+	function cleanResults() {
+		$("#searchResult").hide();
+		//$("#results").html("");
+	}
+	
+	function populateSearchResult(data) {
+		
+		$("#results").html("");
+		
+		$.each(data, function(i, atm) {
+			
+			var address = atm.street + ' - ' + atm.housenumber + ', ' + atm.postalcode; 
+			var position = 'lat ('+atm.lat+'), lng ('+atm.lng+')';
+			
+		    var row =  '<tr>'+
+		    	'<td scope="row">' + atm.id + '</td>' +
+		    	'<td>' + atm.city + '</td>' +
+		    	'<td>' + address + '</td>' +
+		    	'<td>' + position + '</td>' +
+		    	'<td>' + atm.type + '</td>'
+		    '</tr>';
+		    
+		    $("#results").append(row);
+		    
+		});
+		
+		$("#searchResult").show();
+	}
+	
+	function populateJsonModal(formattedJson) {
+		var modal = $("#jsonModal");
+		modal.find('.modal-body').html(formattedJson);
+	}
+	
+	  
+	
+	function serviceCall(serviceURL) {
+		
+		$.ajax({
+			type : "GET",
+			contentType : "application/json",
+			url : serviceURL,
+			dataType : 'json',
+			timeout : 100000,
+			success : function(data) {
+				
+				var formattedJson = JSON.stringify(data, null, '\t');
+				
+				//var jsonData = $.parseJSON(data);
+				populateSearchResult(data);
+				populateJsonModal(formattedJson);
+				
+			},
+			error : function(e) {
+				console.log("ERROR ["+e+"]");
+			},
+			done : function(e) {
+				console.log("DONE");
+			}
+		});
+	}
+	
+</script>

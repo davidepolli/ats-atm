@@ -10,6 +10,11 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
 import it.noema.ats.model.ATM;
 
+/**
+ * dederializaer fot the ATM Entity
+ * @author Noema STI
+ *
+ */
 public class ATMDeserializer extends StdDeserializer<ATM> {
 
 	public ATMDeserializer() {

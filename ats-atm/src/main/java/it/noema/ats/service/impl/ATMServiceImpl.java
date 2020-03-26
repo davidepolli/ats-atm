@@ -2,6 +2,7 @@ package it.noema.ats.service.impl;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,11 +22,16 @@ public class ATMServiceImpl implements ATMService {
 
 	@Override
 	public List<ATM> findByCity(String city) {
-		return atmRepository.findByCity(city);
+		return atmRepository.findByCityContainingIgnoreCase(StringUtils.lowerCase(city));
 	}
 
 	@Override
 	public List<ATM> findByKeyword(String keyword) {
-		return atmRepository.findByKeyword(keyword);
+		return atmRepository.findByKeyword(StringUtils.lowerCase(keyword));
+	}
+	
+	@Override
+	public List<String> getAllCities() {
+		return atmRepository.findCities();
 	}
 }

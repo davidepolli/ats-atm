@@ -11,4 +11,6 @@ public interface ATMService {
 	public List<ATM> findByCity(String city);
 	
 	public List<ATM> findByKeyword(String keyword);
+	
+	public List<String> getAllCities();
 }
