@@ -2,6 +2,7 @@ package it.noema.ats.controller;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,7 +28,8 @@ public class APIController {
 	
 	@GetMapping(value = "city/{city}")
 	private List<ATM> findByCity(@PathVariable String city) {
-		return atmService.findByCity(city);
+		
+		return atmService.findByCity(StringUtils.trim(city));
 	}
 	
 //	@GetMapping(value = "search/{keyword}")
@@ -37,7 +39,7 @@ public class APIController {
 	
 	@GetMapping(value = "filter")
 	private List<ATM> filterByKeyword(@RequestParam String keyword) {
-		return atmService.findByKeyword(keyword);
+		return atmService.findByKeyword(StringUtils.trim(keyword));
 	}
 
 }
