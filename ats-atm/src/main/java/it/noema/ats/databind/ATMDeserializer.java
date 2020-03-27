@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import it.noema.ats.model.ATM;
 
 /**
- * dederializaer fot the ATM Entity
+ * deserializer fot the ATM Entity
  * @author Noema STI
  *
  */
