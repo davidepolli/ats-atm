@@ -53,21 +53,13 @@
 			<div class="card-body">
 				
 				<form id="citySelect" action="#" >
-					<div class="row">
-						<c:if test="${not empty(error)}">
-							<div class="text-danger">${error}</div>
-						</c:if>
-					</div>
+					
 					<div class="form-group">
-						<label for="city"><spring:message code="label.city"/>:</label> <select name="selectedCity" class="form-control" id="city">
-							<c:choose>
-								<c:when test="${not empty(selectedCity)}">
-									<option value="${cityName}" selected="selected">${selectedCity}</option>
-								</c:when>
-								<c:otherwise>
-									<option value="" selected hidden=""><spring:message code="label.select.city"/></option>
-								</c:otherwise>
-							</c:choose>
+						<label for="city"><spring:message code="label.city"/>:</label>
+						    <select name="selectedCity" class="form-control" id="city">
+							<option value="" selected hidden="">
+								<spring:message code="label.select.city"/>
+							</option>
 							<c:forEach var="cityName" items="${cities}">
 								<option value="${cityName}">${cityName}</option>
 							</c:forEach>
@@ -157,26 +149,9 @@
 
 
 
-
-
-
-
-
-
 <script>
 	jQuery(document).ready(function($) {
 	
-		
-/* 		$('#jsonModal').on('show.bs.modal', function (event) {
-		  
-		});
- */		
-		
-		
-		
-		
-		
-		
 		
 		$("#city").change(function(){
 			
@@ -254,8 +229,9 @@
 				
 				var formattedJson = JSON.stringify(data, null, '\t');
 				
-				//var jsonData = $.parseJSON(data);
+				// fill the results table
 				populateSearchResult(data);
+				// populate the modal with the raw json
 				populateJsonModal(formattedJson);
 				
 			},
