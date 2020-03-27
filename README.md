@@ -15,8 +15,8 @@ The front-end application provides a web page displaying:
 - as result of search, the list of the ATMs obtained is displayed in a table and a button that shows a modal with the JSON from the service is available
 
 For accessing the application, due to spring security, the credentials to be used are
-user: davidep
-password: 123456
+user: **davidep**
+password: **123456**
 
 
 For the development the following tools has been used:
@@ -38,12 +38,11 @@ The configuration of the environment is done using Spring Java configuration fil
 ```sh
 it.noema.ats.config.ATMWebConfig
 ```
-For perfomance reasons the complete List of ATMs is retrieved once from Dropbox at startup and stored in an H2 database, in a JPA managed Entitiy called **ATM**,  persisted using the facilities provided by Spring Data.
-
+For perfomance reasons the complete List of ATMs is retrieved once from Dropbox at startup and stored in an **H2** database, in a JPA managed Entitiy called **ATM**,  persisted using the facilities provided by Spring Data. 
 
 # Rest API
 To provide the REST service the Spring-MVC **@RestController** annotation has been used.
-The **APIController**  providess 3 REST methods. 
+The **APIController**  provides 3 REST methods. 
 ```sh
 http://localhost:8080/ats-atm/api/atm/all
 ```
@@ -59,22 +58,22 @@ http://localhost:8080/ats-atm/api/atm/filter?keyword={keyword}
 ```
 Retrieve the ATMs filtered by city and a search criteria.
 
-The URL of the REST methods has been stored in the **application.properties** file to be easily modified (for example to chenge the server port) and retrieved using the Spring @Value annotation
-
-The implementation of the methods has been encapsulated behind a generic ATMService interface and can be replaced if needed(for example retrieve the ATMs from a database).
-The service implementation **ATMServiceIMPL** has been injected into the Spring context using the **@Service(value = "clientAtmService")** annotation.
-This class has the reponsability to retrieve the full ATM List (injected using th Spring **@Autowired** annotation) and return the filtered list.
+The implementation of the methods has been encapsulated behind a generic ATMService interface and can be replaced if needed.
+The service implementation **ATMServiceIMPL** has been injected into the Spring context using the **@Autowired** annotation.
+This class delegates to the **ATMRepository** interface, injected too via autowiring, for the execution of the query against the ATM via **JPA** and Spring Data method naming convention.
+As example,  the **findByCityContainingIgnoreCase(String city)** that allows to retrieve ATMs by city, is just an interface method, no need to implement boilerplate code.
 
 # Front End Application
 
-The front-end application provide a jsp page and a Spring MVC web controller calling the REST services provided
-The implementation of the methods has been encapsulated behind a generic ATMService interface, the controller is not aware of the source of the List.
-The service implementation **ATMServiceIMPL**  has been injected into the Spring context using the **@Service(value = "clientAtmService")** annotation.
-This class has the reponsability to call the REST services (still using **RestTemplate** class) and return the filtered list to the controller.
-For displaying the ATM List **JSTL** tag-libraries has been used.
+The front-end application provided a jsp page, served by a Spring MVC web controller, this controller simply loads a list of cities having ATMs and provides it to the page using spring mvc **model**.
 
-For the view layout, apache tiles has been used.
+The page layout has been built using Apache tiles.
 I18N has been configurated for use of the basename 'messages', the resource files are located under 'src\main\resources\'
+The page shows a summary of the available REST services with example URL to use in a client, like POSTMAN, and two columns showing 2 differente features.
+In the left column, a select is populated with the cities names and on selecting one city an AJAX call is fired to the REST services for listing city's ATMs, retrieved data is displayed in a table.
+The right column shows an input field for a free search in the ATMs field (city, address etc), on submit another AJAX call is fired to the filtering REST service and the results are shown in the same table as the other UC.
+
+The results table has a button allowing the user to see the raw JSON in a modal.
 
 # Security
 As a bonus, spring security has been enabled, securing the access to the app page and to the service call with baseauth.
